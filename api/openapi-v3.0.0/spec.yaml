@@ -1,0 +1,133 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Applicaiton Usage metrics API
+  description: API to send applicaiton level usage metrics across Red Hat developer portfolio
+
+servers:
+  - url: https://example.io/v1
+    description: Publish, receive user engagement metrics
+    variables:
+      environment:
+        default: api.dev    
+        enum:
+          - api         
+          - api.dev     
+          - api.staging 
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    
+  schemas:
+    Metric:
+      type: object
+      required:
+        - application_id
+        - application_version
+        - timestamp
+        - description
+        - payload
+      properties:
+        application_id:
+          type: string
+        application_version:
+          type: string
+        timestamp:
+            type: string
+        description:
+            type: integer
+        payload:
+            type: string
+paths:
+  /api/app_usage_metrics/v1/applications:
+    get:
+      description: Returns a list of supported applications
+      responses:
+        '200':
+          description: Successfully returned supported applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:   
+                  message:
+                    type: string
+  /api/app_usage_metrics/v1/metrics/{application_id}:
+    get:
+      description: Returns a list of metrics for an application 
+      parameters:
+        - name: application_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Limits the metrics per page
+          schema:
+            type: integer
+        - name: page
+          in: query
+          description: Page number of the Metrics to get displayed
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully returned metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Metric'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:   
+                  message:
+                    type: string
+  /api/app_usage_metrics/v1/metrics/publish:
+    post:
+      description: Publish a new instance of Metrics
+      parameters:
+        - name: application_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Metric'
+      responses:
+        '200':
+          description: Successfully published a new instance of a Metric
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:   
+                  message:
+                    type: string
+
+
