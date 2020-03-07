@@ -14,25 +14,27 @@ import (
 
 // Struct to represent an instance of Metric
 type Metric struct {
-	Timestamp   string
-	Name        string
-	Description string
-	Payload     string
+	TimeStamp          string
+	ApplicationName    string
+	ApplicationVersion string
+	Description        string
+	Payload            string
 }
 
-func main() {
-	fmt.Println(createTrackID())
-	m := Metric{
-		Timestamp:   "sasddad",
-		Name:        "asdasdad",
-		Description: "asdasfdadfs",
-		Payload:     "adfafsasfsf",
-	}
-	fmt.Println(PublishMetricInstance(m))
+func GetSupportedApplications() string {
+	return ""
+}
+
+func GetMetrics() string {
+	return ""
+}
+
+func PublishMetrics() string {
+	return ""
 }
 
 // Create unique but random trackID for a user
-func createTrackID() string {
+func CreateTrackID() string {
 	rand.Seed(time.Now().UnixNano())
 	lengthOfRandomID := 16
 	randomChars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + "0123456789")
